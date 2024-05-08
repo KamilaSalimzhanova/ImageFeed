@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Active 1.svg",
+      "filename" : "Active.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Active 2.svg",
+      "filename" : "Active@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Active 3.svg",
+      "filename" : "Active@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

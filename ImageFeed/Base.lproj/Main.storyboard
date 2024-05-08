@@ -42,34 +42,33 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uh5-Ck-x1a" userLabel="Like Button">
-                                                    <rect key="frame" x="333" y="4" width="44" height="44"/>
+                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4rg-Gp-Hxy">
+                                                    <rect key="frame" x="333" y="0.0" width="44" height="44"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="44" id="cu6-qX-V2D"/>
-                                                        <constraint firstAttribute="width" constant="44" id="dww-Yl-Qij"/>
+                                                        <constraint firstAttribute="width" constant="44" id="C1Q-HS-2gD"/>
+                                                        <constraint firstAttribute="height" constant="44" id="GCx-bB-MYT"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                    <state key="normal" image="Like"/>
+                                                    <state key="normal" image="like_on"/>
                                                 </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="Uxn-LM-1hd" firstAttribute="leading" secondItem="fXO-uK-2ur" secondAttribute="leading" constant="8" id="4jH-Ia-cpR"/>
+                                                <constraint firstItem="4rg-Gp-Hxy" firstAttribute="trailing" secondItem="fXO-uK-2ur" secondAttribute="trailing" id="5CC-RN-zVE"/>
                                                 <constraint firstItem="fXO-uK-2ur" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Uxn-LM-1hd" secondAttribute="trailing" constant="8" id="E4C-vS-fOu"/>
                                                 <constraint firstItem="fXO-uK-2ur" firstAttribute="leading" secondItem="9eW-GK-GwV" secondAttribute="leading" constant="16" id="MNJ-s7-Qte"/>
                                                 <constraint firstItem="fXO-uK-2ur" firstAttribute="top" secondItem="9eW-GK-GwV" secondAttribute="top" constant="4" id="Peb-lY-k14"/>
                                                 <constraint firstItem="fXO-uK-2ur" firstAttribute="bottom" secondItem="Uxn-LM-1hd" secondAttribute="bottom" constant="8" id="Xn3-vi-dBO"/>
                                                 <constraint firstAttribute="bottom" secondItem="fXO-uK-2ur" secondAttribute="bottom" constant="4" id="ZkM-zv-1K0"/>
-                                                <constraint firstItem="uh5-Ck-x1a" firstAttribute="top" secondItem="fXO-uK-2ur" secondAttribute="top" id="crW-HM-SzR"/>
-                                                <constraint firstItem="fXO-uK-2ur" firstAttribute="trailing" secondItem="uh5-Ck-x1a" secondAttribute="trailing" id="cxP-5J-odk"/>
                                                 <constraint firstAttribute="trailing" secondItem="fXO-uK-2ur" secondAttribute="trailing" constant="16" id="gfA-cs-lZz"/>
+                                                <constraint firstItem="4rg-Gp-Hxy" firstAttribute="top" secondItem="fXO-uK-2ur" secondAttribute="top" id="nPR-bQ-nsm"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.1019607843" green="0.1058823529" blue="0.1333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
                                             <outlet property="cellImage" destination="fXO-uK-2ur" id="I3d-wD-MAW"/>
                                             <outlet property="dateLabel" destination="Uxn-LM-1hd" id="EQx-rr-LB5"/>
-                                            <outlet property="likeButton" destination="uh5-Ck-x1a" id="kTU-1c-fUC"/>
+                                            <outlet property="likeButton" destination="4rg-Gp-Hxy" id="l6d-cu-8Cs"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -99,6 +98,6 @@
     </scenes>
     <resources>
         <image name="0" width="1600" height="1059"/>
-        <image name="Like" width="42" height="42"/>
+        <image name="like_on" width="42" height="42"/>
     </resources>
 </document>
