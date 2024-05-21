@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E6765A42BFD476600827FC2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6765A32BFD476600827FC2 /* Constants.swift */; };
 		8E81B4A02BF7C79200436CB5 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E81B49F2BF7C79200436CB5 /* ProfileViewController.swift */; };
 		8E85C6922BE9878600E7BAB7 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E85C6912BE9878600E7BAB7 /* ImagesListCell.swift */; };
 		8ECC56052BE436C9008E8A45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ECC56042BE436C9008E8A45 /* AppDelegate.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8E6765A32BFD476600827FC2 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = ImageFeed/Constants.swift; sourceTree = "<group>"; };
 		8E81B49F2BF7C79200436CB5 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		8E85C6912BE9878600E7BAB7 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		8ECC56012BE436C9008E8A45 /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,6 +65,7 @@
 		8ECC55F82BE436C9008E8A45 = {
 			isa = PBXGroup;
 			children = (
+				8E6765A32BFD476600827FC2 /* Constants.swift */,
 				8ECC56032BE436C9008E8A45 /* ImageFeed */,
 				8ECC56022BE436C9008E8A45 /* Products */,
 			);
@@ -175,6 +178,7 @@
 				8E85C6922BE9878600E7BAB7 /* ImagesListCell.swift in Sources */,
 				8E81B4A02BF7C79200436CB5 /* ProfileViewController.swift in Sources */,
 				8ECC56052BE436C9008E8A45 /* AppDelegate.swift in Sources */,
+				8E6765A42BFD476600827FC2 /* Constants.swift in Sources */,
 				8EDCDF882BF81179000A1EF6 /* SingleImageViewController.swift in Sources */,
 				8ECC56072BE436C9008E8A45 /* SceneDelegate.swift in Sources */,
 			);
