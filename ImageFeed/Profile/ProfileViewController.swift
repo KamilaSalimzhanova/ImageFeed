@@ -88,5 +88,4 @@ final class ProfileViewController: UIViewController {
     private func didTapBackButton() {
         return
     }
-    
 }

@@ -1,19 +1,14 @@
 import UIKit
 import WebKit
 
-enum WebViewConstants {
-    static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
-}
-
 final class WebViewViewController: UIViewController {
     
-    @IBOutlet weak var webView: WKWebView!
-    @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet private weak var webView: WKWebView!
+    @IBOutlet private weak var progressView: UIProgressView!
     weak var delegate: WebViewViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         webView.navigationDelegate = self
         loadAuthView()
         updateProgress()
@@ -24,7 +19,8 @@ final class WebViewViewController: UIViewController {
     }
     
     private func loadAuthView () {
-        guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
+        guard var urlComponents = URLComponents(string: Constants.unsplashAuthorizeURLString) else {
+            print("Не получилось заинициализировать URLComponents из  \(Constants.unsplashAuthorizeURLString)")
             return
         }
         
@@ -36,6 +32,7 @@ final class WebViewViewController: UIViewController {
         ]
         
         guard let url = urlComponents.url else {
+            print(" URL не сформировалась из URLComponents")
             return
         }
         
@@ -79,7 +76,7 @@ extension WebViewViewController: WKNavigationDelegate {
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
     ) {
         if let code = code(from: navigationAction) {
-            //TODO: process code
+            delegate?.webViewViewController(self, didAuthenticateWithCode: code)
             decisionHandler(.cancel)
         } else {
             decisionHandler(.allow)

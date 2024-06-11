@@ -218,7 +218,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <segue destination="TdH-EC-4yW" kind="presentation" identifier="ShowWebView" modalPresentationStyle="fullScreen" modalTransitionStyle="coverVertical" id="PzI-Wp-JLZ"/>
+                                    <segue destination="TdH-EC-4yW" kind="presentation" identifier="ShowWebView" modalPresentationStyle="overFullScreen" modalTransitionStyle="coverVertical" id="PzI-Wp-JLZ"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -242,7 +242,7 @@
         <!--Splash-->
         <scene sceneID="e6h-gc-IPF">
             <objects>
-                <viewController title="Splash" id="wCa-1O-oWI" customClass="SplashViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="rootViewController" title="Splash" id="wCa-1O-oWI" customClass="SplashViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ixe-zi-XQz">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -270,7 +270,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="4Fl-Bz-fIN">
             <objects>
-                <tabBarController id="nFW-Fe-w7W" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarViewController" id="nFW-Fe-w7W" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="tTj-tX-rK9">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -367,7 +367,7 @@
                         <viewLayoutGuide key="safeArea" id="lEP-fE-qQM"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="BLD-ht-kr6" firstAttribute="top" secondItem="e8b-84-ijz" secondAttribute="top" id="3Oo-SC-nnq"/>
+                            <constraint firstItem="BLD-ht-kr6" firstAttribute="top" secondItem="VyR-CG-arN" secondAttribute="top" constant="-9" id="3Oo-SC-nnq"/>
                             <constraint firstItem="kqD-7r-XgQ" firstAttribute="top" secondItem="lEP-fE-qQM" secondAttribute="top" constant="40" id="djO-hH-teY"/>
                             <constraint firstItem="VyR-CG-arN" firstAttribute="top" secondItem="lEP-fE-qQM" secondAttribute="top" constant="9" id="dks-wi-dR0"/>
                             <constraint firstItem="VyR-CG-arN" firstAttribute="leading" secondItem="lEP-fE-qQM" secondAttribute="leading" constant="9" id="dtE-3v-ute"/>
