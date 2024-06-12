@@ -4,9 +4,11 @@ import UIKit
 final class OAuth2Service {
     
     static let shared = OAuth2Service()
+    
+    private init() {}
     func fetchOAuthToken (_ code: String, completion: @escaping (Result<String, Error>) -> Void){
         
-        guard let request = self.makeOAuthTokenRequest(code: code) else {
+        guard let request = makeOAuthTokenRequest(code: code) else {
             print("Не удалось создать POST HTTP запрос в Unsplash")
             return
         }
@@ -28,7 +30,7 @@ final class OAuth2Service {
         }.resume()
     }
     
-    func makeOAuthTokenRequest(code: String) -> URLRequest? {
+    private func makeOAuthTokenRequest(code: String) -> URLRequest? {
          guard
             let baseURL = URL(string: "https://unsplash.com")
         else {
