@@ -1,35 +1,53 @@
 import UIKit
 
+enum AuthServiceError: Error {
+    case invalidRequest
+}
 
 final class OAuth2Service {
     
     static let shared = OAuth2Service()
+    private var task: URLSessionTask?
+    private var lastCode: String?
     
     private init() {}
+    
     func fetchOAuthToken (_ code: String, completion: @escaping (Result<String, Error>) -> Void){
+        assert(Thread.isMainThread)
+        
+        if lastCode == code { return }
+        task?.cancel()
+        lastCode = code
         
         guard let request = makeOAuthTokenRequest(code: code) else {
             print("Не удалось создать POST HTTP запрос в Unsplash")
+            completion(.failure(AuthServiceError.invalidRequest))
             return
         }
         
-        URLSession.shared.data(for: request){ result in
-            switch result {
-            case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                    completion(.success(tokenResponse.accessToken))
-                } catch {
-                    print("Ошибка при JSON декодировании: \(error)")
+        let task = URLSession.shared.data(for: request){[weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    do {
+                        let decoder = JSONDecoder()
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
+                        completion(.success(tokenResponse.accessToken))
+                    } catch {
+                        print("Ошибка при JSON декодировании: \(error)")
+                        completion(.failure(error))
+                    }
+                case .failure(let error):
+                    print("Произошла сетевая ошибка: \(error)")
                     completion(.failure(error))
                 }
-            case .failure(let error):
-                print("Произошла сетевая ошибка: \(error)")
-                completion(.failure(error))
+                self?.task = nil
+                self?.lastCode = nil
             }
-        }.resume()
+        }
+        self.task = task
+        task.resume()
     }
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
