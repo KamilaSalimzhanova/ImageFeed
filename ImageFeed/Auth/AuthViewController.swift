@@ -1,5 +1,4 @@
 import UIKit
-import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
@@ -30,16 +29,17 @@ final class AuthViewController: UIViewController {
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         vc.dismiss(animated: true)
-        ProgressHUD.show()
+        UIBlockingProgressHUD.show()
         oauth2Service.fetchOAuthToken(code) {[weak self] result in
             guard let self = self else { return }
-            ProgressHUD.dismiss()
             switch result {
             case .success(let tokenResponse):
+                UIBlockingProgressHUD.dismiss()
                 self.tokenStorage.token = tokenResponse
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
                 print("Ошибка при получении токена: \(error)")
+                UIBlockingProgressHUD.dismiss()
             }
             
         }

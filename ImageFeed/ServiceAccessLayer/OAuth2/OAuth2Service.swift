@@ -2,6 +2,8 @@ import UIKit
 
 enum AuthServiceError: Error {
     case invalidRequest
+    case requestCancelled
+    case jsonDecoder
 }
 
 final class OAuth2Service {
@@ -20,13 +22,18 @@ final class OAuth2Service {
         lastCode = code
         
         guard let request = makeOAuthTokenRequest(code: code) else {
-            print("Не удалось создать POST HTTP запрос в Unsplash")
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }
         
         let task = URLSession.shared.data(for: request){[weak self] result in
             DispatchQueue.main.async {
+                
+                guard let self = self, self.lastCode == code else {
+                    completion(.failure(AuthServiceError.requestCancelled))
+                    return
+                }
+                
                 switch result {
                 case .success(let data):
                     do {
@@ -35,15 +42,15 @@ final class OAuth2Service {
                         let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
                         completion(.success(tokenResponse.accessToken))
                     } catch {
-                        print("Ошибка при JSON декодировании: \(error)")
-                        completion(.failure(error))
+                        completion(.failure(AuthServiceError.jsonDecoder))
+                        self.lastCode = nil
                     }
                 case .failure(let error):
                     print("Произошла сетевая ошибка: \(error)")
                     completion(.failure(error))
+                    self.lastCode = nil
                 }
-                self?.task = nil
-                self?.lastCode = nil
+                self.task = nil
             }
         }
         self.task = task
