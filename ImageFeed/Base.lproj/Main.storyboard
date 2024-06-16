@@ -173,7 +173,7 @@
         <scene sceneID="ak8-SA-8ay">
             <objects>
                 <viewController title="Profile" id="roj-Nh-A7z" customClass="ProfileViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="k5f-AA-CV5">
+                    <view key="view" contentMode="scaleToFill" id="k5f-AA-CV5" customClass="Profile">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="5xM-aY-bFf"/>
@@ -267,10 +267,10 @@
             </objects>
             <point key="canvasLocation" x="2932.06106870229" y="-801.4084507042254"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Custom Tab Bar Controller-->
         <scene sceneID="4Fl-Bz-fIN">
             <objects>
-                <tabBarController storyboardIdentifier="TabBarViewController" id="nFW-Fe-w7W" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarViewController" id="nFW-Fe-w7W" customClass="CustomTabBarController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="tTj-tX-rK9">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -283,7 +283,7 @@
                     </tabBar>
                     <connections>
                         <segue destination="P83-CT-g1t" kind="relationship" relationship="viewControllers" id="BIL-rM-0q5"/>
-                        <segue destination="roj-Nh-A7z" kind="relationship" relationship="viewControllers" id="23j-EA-Scl"/>
+                        <segue destination="roj-Nh-A7z" kind="relationship" relationship="viewControllers" destinationCreationSelector="ShowProfileView" id="23j-EA-Scl"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wqv-oT-JGp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

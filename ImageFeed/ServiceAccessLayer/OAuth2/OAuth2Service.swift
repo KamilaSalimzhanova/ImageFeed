@@ -16,9 +16,19 @@ final class OAuth2Service {
     
     func fetchOAuthToken (_ code: String, completion: @escaping (Result<String, Error>) -> Void){
         assert(Thread.isMainThread)
-        
-        if lastCode == code { return }
-        task?.cancel()
+        if task != nil {
+            if lastCode != code {
+                task?.cancel()
+            } else {
+                completion(.failure(AuthServiceError.invalidRequest))
+                return
+            }
+        } else {
+            if lastCode == code {
+                completion(.failure(AuthServiceError.invalidRequest))
+                return
+            }
+        }
         lastCode = code
         
         guard let request = makeOAuthTokenRequest(code: code) else {
@@ -58,7 +68,7 @@ final class OAuth2Service {
     }
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
-         guard
+        guard
             let baseURL = URL(string: "https://unsplash.com")
         else {
              print("BaseUrl cannot be constructed")

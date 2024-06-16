@@ -2,6 +2,8 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
+    var profileService = ProfileService.shared
+    
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "ProfilePhoto")
@@ -38,14 +40,25 @@ final class ProfileViewController: UIViewController {
         let button = UIButton(type: .custom)
         let image = UIImage(named: "BackButton")
         button.setImage(image, for: .normal)
-        button.addTarget(self, action: #selector(self.didTapBackButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         return button
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews()
+        updateProfileDetails()
         makeConstraints()
+    }
+    
+    private func updateProfileDetails() {
+        if let profile = profileService.getProfile() {
+            nameLabel.text = profile.name
+            loginLabel.text = profile.loginName
+            descriptionLabel.text = profile.bio
+        } else {
+            return
+        }
     }
     
     private func addSubviews() {
@@ -86,6 +99,9 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapBackButton() {
-        return
+        // Implement your action here
+    }
+    @objc private func profileUpdated() {
+        updateProfileDetails()
     }
 }

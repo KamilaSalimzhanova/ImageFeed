@@ -38,10 +38,9 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 self.tokenStorage.token = tokenResponse
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
-                print("Ошибка при получении токена: \(error)")
                 UIBlockingProgressHUD.dismiss()
+                print("Ошибка при получении токена: \(error)")
             }
-            
         }
     }
 

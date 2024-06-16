@@ -3,12 +3,16 @@ import UIKit
 final class SplashViewController: UIViewController {
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     private let oauth2TokenStorage = OAuth2TokenStorage.shared
+    private let profileService = ProfileService.shared
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         if oauth2TokenStorage.token != nil {
-            switchToTabBarController()
+            guard let token = oauth2TokenStorage.token else {
+                return
+            }
+            fetchProfile(token)
         } else {
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
         }
@@ -30,8 +34,8 @@ final class SplashViewController: UIViewController {
         }
         
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
-            .instantiateViewController(withIdentifier: "TabBarViewController")
-           
+                    .instantiateViewController(withIdentifier: "TabBarViewController")
+        
         window.rootViewController = tabBarController
     }
 }
@@ -52,9 +56,28 @@ extension SplashViewController {
 
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
-        vc.dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            self.switchToTabBarController()
+        vc.dismiss(animated: true)
+        
+        guard let token = oauth2TokenStorage.token else {
+            return
+        }
+                
+        fetchProfile(token)
+    }
+    private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
+        DispatchQueue.main.async {
+            self.profileService.fetchProfile(token) { [weak self] result in
+                UIBlockingProgressHUD.dismiss()
+                guard let self = self else { return }
+                switch result {
+                case .success(_):
+                    self.switchToTabBarController()
+                case .failure(_):
+                    print("Error in fetching profile service")
+                    return
+                }
+            }
         }
     }
 }
