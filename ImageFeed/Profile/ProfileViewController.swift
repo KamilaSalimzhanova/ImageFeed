@@ -48,6 +48,7 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor(named: "YP Black") 
         profileImageServiceObserver = NotificationCenter.default
             .addObserver(
                 forName: ProfileImageService.didChangeNotification,
@@ -139,14 +140,7 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapBackButton() {
-        guard let window = UIApplication.shared.windows.first else {
-            assertionFailure("Invalid window configuration")
-            return
-        }
-        
-        let authController = UIStoryboard(name: "Main", bundle: .main) .instantiateViewController(withIdentifier: "rootViewController")
-        
-        window.rootViewController = authController
+    
     }
     @objc private func profileUpdated() {
         updateProfileDetails()
