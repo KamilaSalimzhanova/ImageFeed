@@ -48,12 +48,12 @@ final class OAuth2Service {
                 switch result {
                 case .success(let data):
                     completion(.success(data.accessToken))
-                    self.task = nil
                 case .failure(let error):
                     print("Network error in OAuth2Service \(error)")
                     completion(.failure(error))
                     self.lastCode = nil
                 }
+                self.task = nil
             }
         }
         self.task = task
