@@ -17,12 +17,17 @@ final class AuthViewController: UIViewController {
                 let webViewViewController = segue.destination as? WebViewViewController
             else {
                 fatalError("Failed to prepare for \(showWebViewSegueIdentifier)")
-                
             }
             webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
         }
+    }
+    private func showAlert() {
+        let alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось войти в систему", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ок", style: .default, handler: nil)
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
     }
 }
 
@@ -39,7 +44,8 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
                 UIBlockingProgressHUD.dismiss()
-                print("Ошибка при получении токена: \(error)")
+                print("Network error in authviewcontroller \(error)")
+                self.showAlert()
             }
         }
     }

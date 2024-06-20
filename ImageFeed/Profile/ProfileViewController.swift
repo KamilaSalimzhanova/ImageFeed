@@ -1,8 +1,10 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
     var profileService = ProfileService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -46,9 +48,47 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
         addSubviews()
         updateProfileDetails()
         makeConstraints()
+    }
+    
+    private func updateAvatar() {
+        guard let profileImageURL = ProfileImageService.shared.avatarURL,
+                let imageUrl = URL(string: profileImageURL)
+        else {
+            return
+            
+        }
+        let cache = ImageCache.default
+        cache.clearDiskCache()
+        let processor = RoundCornerImageProcessor(cornerRadius: 35)
+        imageView.kf.indicatorType = .activity
+        imageView.kf.setImage(with: imageUrl,
+                              placeholder: UIImage(named: "placeholder"),
+                              options: [
+                                .processor(processor),
+                                .transition(.fade(1))
+                              ]) { result in
+                                  switch result {
+                                  case .success(let value):
+                                      print(value.image)
+                                      print(value.cacheType)
+                                      print(value.source)
+                                  case .failure(let error):
+                                      print(error)
+                                  }
+                              }
     }
     
     private func updateProfileDetails() {
@@ -99,7 +139,14 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapBackButton() {
-        // Implement your action here
+        guard let window = UIApplication.shared.windows.first else {
+            assertionFailure("Invalid window configuration")
+            return
+        }
+        
+        let authController = UIStoryboard(name: "Main", bundle: .main) .instantiateViewController(withIdentifier: "rootViewController")
+        
+        window.rootViewController = authController
     }
     @objc private func profileUpdated() {
         updateProfileDetails()

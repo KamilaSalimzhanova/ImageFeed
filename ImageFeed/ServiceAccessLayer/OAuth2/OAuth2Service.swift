@@ -11,6 +11,7 @@ final class OAuth2Service {
     static let shared = OAuth2Service()
     private var task: URLSessionTask?
     private var lastCode: String?
+    let session = URLSession.shared
     
     private init() {}
     
@@ -36,31 +37,23 @@ final class OAuth2Service {
             return
         }
         
-        let task = URLSession.shared.data(for: request){[weak self] result in
+        let task = session.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             DispatchQueue.main.async {
                 
                 guard let self = self, self.lastCode == code else {
                     completion(.failure(AuthServiceError.requestCancelled))
                     return
                 }
-                
+        
                 switch result {
                 case .success(let data):
-                    do {
-                        let decoder = JSONDecoder()
-                        decoder.keyDecodingStrategy = .convertFromSnakeCase
-                        let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                        completion(.success(tokenResponse.accessToken))
-                    } catch {
-                        completion(.failure(AuthServiceError.jsonDecoder))
-                        self.lastCode = nil
-                    }
+                    completion(.success(data.accessToken))
+                    self.task = nil
                 case .failure(let error):
-                    print("Произошла сетевая ошибка: \(error)")
+                    print("Network error in OAuth2Service \(error)")
                     completion(.failure(error))
                     self.lastCode = nil
                 }
-                self.task = nil
             }
         }
         self.task = task

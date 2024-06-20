@@ -188,7 +188,7 @@
         <!--Auth View-->
         <scene sceneID="1SD-hK-doZ">
             <objects>
-                <viewController title="Auth View" id="Pfl-69-E27" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="authViewController" title="Auth View" id="Pfl-69-E27" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ArP-o7-4gk">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

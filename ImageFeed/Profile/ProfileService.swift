@@ -49,24 +49,21 @@ final class ProfileService {
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-        let task = URLSession.shared.data(for: request) {[weak self] result in
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
             guard let self = self, self.lastToken == token else {
                 completion(.failure(ProfileServiceError.requestCancelled))
                 return
             }
             switch result {
-            case .success(let data):
-                do {
-                    let profileResponse = try JSONDecoder().decode(ProfileResult.self, from: data)
-                    profile = Profile(username: profileResponse.username, name: "\(profileResponse.firstName) \(profileResponse.lastName ?? "")", loginName: "@\(profileResponse.username)", bio: profileResponse.bio ?? "")
-                    guard let profile else { assertionFailure("profile is nil"); return }
-                    completion(.success(profile))
-                    self.task = nil
-                } catch {
-                    completion(.failure(ProfileServiceError.jsonDecoding))
-                    self.lastToken = nil
-                }
+            case .success(let profileResponse):
+                
+                let profile = Profile(username: profileResponse.username, name: "\(profileResponse.firstName) \(profileResponse.lastName ?? "")", loginName: "@\(profileResponse.username)", bio: profileResponse.bio ?? "")
+                
+                self.profile = profile
+                completion(.success(profile))
+                
             case .failure(let error):
+                print("Network error in profile service \(error)")
                 completion(.failure(error))
                 self.lastToken = nil
             }
