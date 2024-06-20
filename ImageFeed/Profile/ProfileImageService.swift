@@ -27,7 +27,7 @@ final class ProfileImageService {
         task?.cancel()
         
         guard let request = makeRequest(username) else {
-            assertionFailure("Image service url request is not built ")
+            print("[fetchProfileImageURL]: Error in calling function makeRequest")
             return
         }
         
@@ -43,7 +43,7 @@ final class ProfileImageService {
                         userInfo: ["URL": profileImageUrl.profileImage.small])
                 self.avatarURL = profileImageUrl.profileImage.small
             case .failure(let error):
-                print("Network error in profile image service \(error)")
+                print("[fetchProfileImageURL profile image service]: Error in url session object tasks - код ошибки \(error)")
                 completion(.failure(error))
             }
             self.task = nil
@@ -57,16 +57,16 @@ extension ProfileImageService {
     private func makeRequest(_ username: String) -> URLRequest? {
         var urlComponents = URLComponents()
         guard let baseURL = URL(string: "https://api.unsplash.com") else {
-            assertionFailure("BaseUrl cannot be constructed")
+            print("[Make request]: Error in constructing base url")
             return nil
         }
         urlComponents.path = "/users/\(username)"
         guard let url = urlComponents.url(relativeTo: baseURL) else {
-            assertionFailure("Url is not constructed")
+            print("[Make request]: Error in constructing url from components")
             return nil
         }
         guard let token = oAuth2TokenStorage.token else {
-            assertionFailure("token is nil in image service of the profile")
+            print("[Make request]: Error in getting token out of storage")
             return nil
         }
         var request = URLRequest(url: url)
