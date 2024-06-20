@@ -76,6 +76,7 @@ extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
         guard let token = oauth2TokenStorage.token else {
+            print("OAuth2token storage is empty")
             return
         }
                 
@@ -91,8 +92,8 @@ extension SplashViewController: AuthViewControllerDelegate {
                 case .success(let profile):
                     ProfileImageService.shared.fetchProfileImageURL(username: profile.username) { _ in }
                     self.switchToTabBarController()
-                case .failure(_):
-                    print("Error in fetching profile service")
+                case .failure(let error):
+                    print("[Fetch profile splash view controller]: Error in fetching profile - код ошибки \(error)")
                     return
                 }
             }

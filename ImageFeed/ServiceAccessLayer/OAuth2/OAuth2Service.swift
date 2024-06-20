@@ -21,11 +21,13 @@ final class OAuth2Service {
             if lastCode != code {
                 task?.cancel()
             } else {
+                print("[fetchOAuthToken]: Error in lastCode is same as code")
                 completion(.failure(AuthServiceError.invalidRequest))
                 return
             }
         } else {
             if lastCode == code {
+                print("[fetchOAuthToken]: Error in lastCode is same as code")
                 completion(.failure(AuthServiceError.invalidRequest))
                 return
             }
@@ -41,6 +43,7 @@ final class OAuth2Service {
             DispatchQueue.main.async {
                 
                 guard let self = self, self.lastCode == code else {
+                    print("[OAuth2Service fetch oauth token]: request cancelled")
                     completion(.failure(AuthServiceError.requestCancelled))
                     return
                 }
@@ -49,7 +52,7 @@ final class OAuth2Service {
                 case .success(let data):
                     completion(.success(data.accessToken))
                 case .failure(let error):
-                    print("Network error in OAuth2Service \(error)")
+                    print("[OAuth2Service fetch oauth token]: Error in object task - код ошибки \(error)")
                     completion(.failure(error))
                     self.lastCode = nil
                 }
@@ -64,7 +67,7 @@ final class OAuth2Service {
         guard
             let baseURL = URL(string: "https://unsplash.com")
         else {
-             print("BaseUrl cannot be constructed")
+            print("[makeOAuthTokenRequest]: url cannot be constructed")
              return nil
          }
         
@@ -78,7 +81,7 @@ final class OAuth2Service {
              + "&&grant_type=authorization_code",
              relativeTo: baseURL
          ) else {
-             print("Unable to construct makeOAuthTokenRequestUrl")
+             print("[makeOAuthTokenRequest]: urlRequest for token cannot be constructed")
              return nil
          }
         

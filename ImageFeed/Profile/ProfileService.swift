@@ -43,6 +43,7 @@ final class ProfileService {
         lastToken = token
         
         guard let url = URL(string: "https://api.unsplash.com/me") else {
+            print("[Fetch profile]: Error in URL request")
             completion(.failure(ProfileServiceError.invalidUrlRequest))
             return
          }
@@ -64,7 +65,7 @@ final class ProfileService {
                 self.task = nil
                 
             case .failure(let error):
-                print("Network error in profile service \(error)")
+                print("[Fetch profile]: Error in url session data tasks - код ошибки \(error)")
                 completion(.failure(error))
                 self.lastToken = nil
             }

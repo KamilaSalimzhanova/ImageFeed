@@ -20,14 +20,14 @@ extension URLSession {
                 if 200 ..< 300 ~= statusCode {
                     fulfillCompletionOnTheMainThread(.success(data))
                 } else {
-                    print("HTTP status code error")
+                    print("[Data task]: Network Error - код ошибки \(statusCode)")
                     fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(statusCode)))
                 }
             } else if let error = error {
-                print("Request error occurred during dataTask in URLSession")
+                print("[Data task]: Url Request Error - код ошибки \(error)")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
             } else {
-                print("Url session error")
+                print("[Data task]: Url Session Error - код ошибки \(error)")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
             }
         })
@@ -49,13 +49,14 @@ extension URLSession {
                     }
                } catch {
                    let errorDescription = String(data: data, encoding: .utf8) ?? "No data"
-                   print("Decoding Error: \(error), data: \(errorDescription)")
+                   print("[Data objectTask]: Json encoding Error - код ошибки \(errorDescription)")
                    DispatchQueue.main.async {
                        completion(.failure(error))
                    }
                }
             case .failure(let error):
                 DispatchQueue.main.async {
+                    print("[Data objectTask]: Error in Data Task - код ошибки \(error)")
                     completion(.failure(error))
                 }
             }

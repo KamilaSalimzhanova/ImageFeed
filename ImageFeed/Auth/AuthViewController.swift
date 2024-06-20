@@ -44,7 +44,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
                 UIBlockingProgressHUD.dismiss()
-                print("Network error in authviewcontroller \(error)")
+                print("[oauth2Service fetchOAuthToken]: Error in fetching token - код ошибки \(error)")
                 self.showAlert()
             }
         }
