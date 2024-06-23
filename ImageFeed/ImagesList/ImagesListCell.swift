@@ -1,7 +1,52 @@
 import UIKit
+import Kingfisher
+
+protocol ImagesListDelegate: AnyObject {
+    //
+}
+
 final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var cellImage: UIImageView!
+    weak var delegate: ImagesListDelegate?
+    
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }()
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        cellImage.kf.cancelDownloadTask()
+    }
+    
+    func configCellImage(for photo: Photo){
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache()
+        
+        guard let thumbImageURL = URL(string: photo.thumbImageURL) else {
+            print("thumb image url is empty")
+            return
+        }
+        
+        cellImage.kf.indicatorType = .activity
+        cellImage.kf.setImage(with: thumbImageURL, placeholder: UIImage(named: "imageListPlaceholder")) { result in
+              switch result {
+              case .success(let image):
+                  self.cellImage.contentMode = .scaleAspectFill
+                  self.cellImage.image = image.image
+              case .failure(let error):
+                  print(error)
+                  self.cellImage.image = UIImage(named: "imageListPlaceholder")
+              }
+          }
+        dateLabel.text = dateFormatter.string(from: photo.createdAt ?? Date())
+        let likeImage = photo.isLiked ? UIImage(named: "like_on") : UIImage(named: "like_off")
+        likeButton.setImage(likeImage, for: .normal)
+    }
 }

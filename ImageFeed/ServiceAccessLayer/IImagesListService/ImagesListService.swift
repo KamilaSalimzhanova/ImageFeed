@@ -63,6 +63,11 @@ final class ImagesListService {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        guard let token = OAuth2TokenStorage.shared.token else {
+            print("bearer token does not exist")
+            return nil
+        }
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }
 }
