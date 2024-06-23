@@ -64,13 +64,6 @@ final class OAuth2Service {
     }
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
-        guard
-            let baseURL = URL(string: "https://unsplash.com")
-        else {
-            print("[makeOAuthTokenRequest]: url cannot be constructed")
-             return nil
-         }
-        
          guard
             let url = URL(
              string: "/oauth/token"
@@ -79,7 +72,7 @@ final class OAuth2Service {
              + "&&redirect_uri=\(Constants.redirectURI)"
              + "&&code=\(code)"
              + "&&grant_type=authorization_code",
-             relativeTo: baseURL
+             relativeTo: Constants.baseURL
          ) else {
              print("[makeOAuthTokenRequest]: urlRequest for token cannot be constructed")
              return nil

@@ -1,31 +1,5 @@
 import UIKit
 
-enum ProfileServiceError: Error {
-    case invalidUrlRequest
-    case jsonDecoding
-    case requestCancelled
-}
-struct ProfileResult: Codable {
-    let username: String
-    let firstName: String
-    let lastName: String?
-    let bio: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case username
-        case firstName = "first_name"
-        case lastName = "last_name"
-        case bio
-    }
-}
-
-struct Profile {
-    let username: String
-    let name: String
-    let loginName: String
-    let bio: String
-}
-
 final class ProfileService {
     
     private(set) var profile: Profile?
@@ -42,7 +16,7 @@ final class ProfileService {
         task?.cancel()
         lastToken = token
         
-        guard let url = URL(string: "https://api.unsplash.com/me") else {
+        guard let url = URL(string: Constants.profileURLString) else {
             print("[Fetch profile]: Error in URL request")
             completion(.failure(ProfileServiceError.invalidUrlRequest))
             return
