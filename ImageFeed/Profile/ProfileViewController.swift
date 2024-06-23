@@ -140,7 +140,10 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapBackButton() {
-    
+        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else { return }
+        authViewController.modalPresentationStyle = .fullScreen
+        present(authViewController, animated: true, completion: nil)
     }
     @objc private func profileUpdated() {
         updateProfileDetails()
