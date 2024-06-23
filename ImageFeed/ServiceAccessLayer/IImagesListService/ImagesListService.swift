@@ -12,7 +12,6 @@ final class ImagesListService {
     
     private init() {}
     
-    
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
         currentTask?.cancel()
@@ -62,6 +61,11 @@ final class ImagesListService {
         }
         
         var request = URLRequest(url: url)
+        guard let token = OAuth2TokenStorage.shared.token else {
+            print("OAuth2token storage is empty")
+            return nil
+        }
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         return request
     }
