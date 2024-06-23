@@ -17,26 +17,35 @@ final class AuthViewController: UIViewController {
                 let webViewViewController = segue.destination as? WebViewViewController
             else {
                 fatalError("Failed to prepare for \(showWebViewSegueIdentifier)")
-                
             }
             webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
         }
     }
+    private func showAlert() {
+        let alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось войти в систему", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ок", style: .default, handler: nil)
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         vc.dismiss(animated: true)
+        UIBlockingProgressHUD.show()
         oauth2Service.fetchOAuthToken(code) {[weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let tokenResponse):
+                UIBlockingProgressHUD.dismiss()
                 self.tokenStorage.token = tokenResponse
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
-                print("Ошибка при получении токена: \(error)")
+                UIBlockingProgressHUD.dismiss()
+                print("[oauth2Service fetchOAuthToken]: Error in fetching token - код ошибки \(error)")
+                self.showAlert()
             }
         }
     }

@@ -1,45 +1,69 @@
 import UIKit
 
+enum AuthServiceError: Error {
+    case invalidRequest
+    case requestCancelled
+    case jsonDecoder
+}
 
 final class OAuth2Service {
     
     static let shared = OAuth2Service()
+    private var task: URLSessionTask?
+    private var lastCode: String?
+    let session = URLSession.shared
     
     private init() {}
+    
     func fetchOAuthToken (_ code: String, completion: @escaping (Result<String, Error>) -> Void){
+        assert(Thread.isMainThread)
+        if task != nil {
+            if lastCode != code {
+                task?.cancel()
+            } else {
+                print("[fetchOAuthToken]: Error in lastCode is same as code")
+                completion(.failure(AuthServiceError.invalidRequest))
+                return
+            }
+        } else {
+            if lastCode == code {
+                print("[fetchOAuthToken]: Error in lastCode is same as code")
+                completion(.failure(AuthServiceError.invalidRequest))
+                return
+            }
+        }
+        lastCode = code
         
         guard let request = makeOAuthTokenRequest(code: code) else {
-            print("Не удалось создать POST HTTP запрос в Unsplash")
+            completion(.failure(AuthServiceError.invalidRequest))
             return
         }
         
-        URLSession.shared.data(for: request){ result in
-            switch result {
-            case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                    completion(.success(tokenResponse.accessToken))
-                } catch {
-                    print("Ошибка при JSON декодировании: \(error)")
-                    completion(.failure(error))
+        let task = session.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            DispatchQueue.main.async {
+                
+                guard let self = self, self.lastCode == code else {
+                    print("[OAuth2Service fetch oauth token]: request cancelled")
+                    completion(.failure(AuthServiceError.requestCancelled))
+                    return
                 }
-            case .failure(let error):
-                print("Произошла сетевая ошибка: \(error)")
-                completion(.failure(error))
+        
+                switch result {
+                case .success(let data):
+                    completion(.success(data.accessToken))
+                case .failure(let error):
+                    print("[OAuth2Service fetch oauth token]: Error in object task - код ошибки \(error)")
+                    completion(.failure(error))
+                    self.lastCode = nil
+                }
+                self.task = nil
             }
-        }.resume()
+        }
+        self.task = task
+        task.resume()
     }
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
-         guard
-            let baseURL = URL(string: "https://unsplash.com")
-        else {
-             print("BaseUrl cannot be constructed")
-             return nil
-         }
-        
          guard
             let url = URL(
              string: "/oauth/token"
@@ -48,9 +72,9 @@ final class OAuth2Service {
              + "&&redirect_uri=\(Constants.redirectURI)"
              + "&&code=\(code)"
              + "&&grant_type=authorization_code",
-             relativeTo: baseURL
+             relativeTo: Constants.baseURL
          ) else {
-             print("Unable to construct makeOAuthTokenRequestUrl")
+             print("[makeOAuthTokenRequest]: urlRequest for token cannot be constructed")
              return nil
          }
         
