@@ -30,7 +30,6 @@ struct PhotoResult: Decodable {
     let createdAt: String?
     let width: Int
     let height: Int
-    let color: String
     let likedByUser: Bool
     let description: String?
     let urls: UrlsResult
@@ -40,16 +39,12 @@ struct PhotoResult: Decodable {
         case createdAt = "created_at"
         case width
         case height
-        case color
         case likedByUser = "liked_by_user"
         case description
         case urls
     }
 }
 struct UrlsResult: Decodable {
-    let raw: String
     let full: String
-    let regular: String
-    let small: String
     let thumb: String
 }

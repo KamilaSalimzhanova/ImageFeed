@@ -1,7 +1,7 @@
 import UIKit
-import Kingfisher
+import ProgressHUD
 
-final class ImagesListViewController: UIViewController, ImagesListDelegate {
+final class ImagesListViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     private var photos: [Photo] = []
     private let imagesListService = ImagesListService.shared
@@ -37,14 +37,7 @@ final class ImagesListViewController: UIViewController, ImagesListDelegate {
 
             let photo = photos[indexPath.row].largeImageURL
             let image = URL(string: photo)!
-            KingfisherManager.shared.retrieveImage(with: image) { result in
-                switch result {
-                case .success(let value):
-                    viewController.image = value.image
-                case .failure(let error):
-                    print("Error: \(error)")
-                }
-            }
+            viewController.image = UIImage(named: "imageListPlaceholder")
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -124,5 +117,27 @@ extension ImagesListViewController {
                 guard let self = self else { return }
                 self.updateTableViewAnimated()
             }
+    }
+}
+
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let photo = photos[indexPath.row]
+        UIBlockingProgressHUD.show()
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) {[weak self] result in
+            guard let self = self else {return}
+            switch result {
+            case .success:
+                self.photos = self.imagesListService.photos
+                cell.setLiked(isLiked: self.photos[indexPath.row].isLiked)
+                UIBlockingProgressHUD.dismiss()
+            case .failure(let error):
+                UIBlockingProgressHUD.dismiss()
+                let alertController = UIAlertController(title: "Error", message: "Something went wrong in cell did tap like function: \(error.localizedDescription)", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alertController, animated: true, completion: nil)
+            }
+        }
     }
 }
