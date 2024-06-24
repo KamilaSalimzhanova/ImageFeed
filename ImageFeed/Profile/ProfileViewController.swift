@@ -4,6 +4,7 @@ import Kingfisher
 final class ProfileViewController: UIViewController {
     
     var profileService = ProfileService.shared
+    var profileClearService = ProfileLogoutService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     
     private lazy var imageView: UIImageView = {
@@ -76,20 +77,20 @@ final class ProfileViewController: UIViewController {
         let processor = RoundCornerImageProcessor(cornerRadius: 35)
         imageView.kf.indicatorType = .activity
         imageView.kf.setImage(with: imageUrl,
-                              placeholder: UIImage(named: "placeholder"),
-                              options: [
-                                .processor(processor),
-                                .transition(.fade(1))
-                              ]) { result in
-                                  switch result {
-                                  case .success(let value):
-                                      print(value.image)
-                                      print(value.cacheType)
-                                      print(value.source)
-                                  case .failure(let error):
-                                      print(error)
-                                  }
-                              }
+          placeholder: UIImage(named: "placeholder"),
+          options: [
+            .processor(processor),
+            .transition(.fade(1))
+          ]) { result in
+              switch result {
+              case .success(let value):
+                  print(value.image)
+                  print(value.cacheType)
+                  print(value.source)
+              case .failure(let error):
+                  print(error)
+              }
+          }
     }
     
     private func updateProfileDetails() {
@@ -140,10 +141,24 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapBackButton() {
-        let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else { return }
-        authViewController.modalPresentationStyle = .fullScreen
-        present(authViewController, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Пока!", message: "Вы хотите выйти?", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Да!", style: .default) { [weak self] _ in
+            guard let self else {return}
+            self.profileClearService.logout()
+            guard let window = UIApplication.shared.windows.first else {
+                assertionFailure("Invalid window configuration")
+                return
+            }
+            window.rootViewController = SplashViewController()
+            window.makeKeyAndVisible()
+        }
+       
+        let noAction = UIAlertAction(title: "Нет", style: .default) { _ in
+            alert.dismiss(animated: true)
+        }
+        alert.addAction(action)
+        alert.addAction(noAction)
+        present(alert, animated: true)
     }
     @objc private func profileUpdated() {
         updateProfileDetails()

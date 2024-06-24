@@ -53,6 +53,14 @@ final class ImagesListCell: UITableViewCell {
         likeButton.setImage(likeImage, for: .normal)
     }
     
+    static func clear(){
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache ()
+        cache.cleanExpiredMemoryCache()
+        cache.backgroundCleanExpiredDiskCache()
+    }
+    
     @IBAction func likeButtonClicked(_ sender: Any) {
         delegate?.imageListCellDidTapLike(self)
     }
