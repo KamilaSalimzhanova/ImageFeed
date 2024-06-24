@@ -6,6 +6,8 @@ final class ProfileViewController: UIViewController {
     var profileService = ProfileService.shared
     var profileClearService = ProfileLogoutService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
+    private var gradientLayer: CAGradientLayer?
+    private var gradientChangeAnimation: CABasicAnimation?
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -57,6 +59,7 @@ final class ProfileViewController: UIViewController {
                 queue: .main
             ) { [weak self] _ in
                 guard let self = self else { return }
+                gradientLayer?.removeFromSuperlayer()
                 self.updateAvatar()
             }
         updateAvatar()
@@ -137,6 +140,28 @@ final class ProfileViewController: UIViewController {
             logoutButton.widthAnchor.constraint(equalToConstant: 24),
             logoutButton.heightAnchor.constraint(equalToConstant: 24),
         ])
+    }
+    
+    private func setupGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        gradientLayer?.frame = imageView.bounds
+        gradientLayer?.colors = [
+            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 0.6).cgColor,
+            UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 0.6).cgColor,
+            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 0.6).cgColor
+        ]
+        gradientLayer?.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer?.endPoint = CGPoint(x: 1, y: 0.5)
+        gradientLayer?.cornerRadius = imageView.bounds.width / 2
+        gradientLayer?.masksToBounds = true
+        imageView.layer.addSublayer(gradientLayer!)
+        
+       gradientChangeAnimation = CABasicAnimation(keyPath: "locations")
+       gradientChangeAnimation?.duration = 3.0
+       gradientChangeAnimation?.repeatCount = .infinity
+       gradientChangeAnimation?.fromValue = [0, 0.1, 0.3]
+       gradientChangeAnimation?.toValue = [0, 0.8, 1]
+       gradientLayer?.add(gradientChangeAnimation!, forKey: "locationsChange")
     }
     
     @objc
