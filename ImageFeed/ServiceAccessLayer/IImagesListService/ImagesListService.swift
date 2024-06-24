@@ -86,8 +86,6 @@ final class ImagesListService {
     }
 }
 
-
-
 extension ImagesListService {
     private func makePhotosRequest(page: Int) -> URLRequest? {
         guard var urlComponents = URLComponents(url: Constants.defaultBaseURL.appendingPathComponent("/photos"), resolvingAgainstBaseURL: false) else {
