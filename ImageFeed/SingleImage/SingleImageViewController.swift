@@ -2,6 +2,7 @@ import UIKit
 import Kingfisher
 
 final class SingleImageViewController: UIViewController {
+    private let placeholderImageView = UIImageView(image: UIImage(named: "single_image_placeholder"))
     var image: URL?
     var uiImage: UIImage?
     
@@ -12,6 +13,7 @@ final class SingleImageViewController: UIViewController {
         super.viewDidLoad()
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
+        addBackground()
         showFullImage(url: self.image)
         imageView.contentMode = .scaleAspectFit
     }
@@ -24,6 +26,14 @@ final class SingleImageViewController: UIViewController {
         present(share, animated: true, completion: nil)
     }
     
+    private func addBackground(){
+        placeholderImageView.contentMode = .center
+        placeholderImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(placeholderImageView)
+        placeholderImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        placeholderImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
+    
     private func showFullImage(url: URL?) {
         guard let url else { return }
         UIBlockingProgressHUD.show()
@@ -32,6 +42,7 @@ final class SingleImageViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case .success(let imageResult):
+                placeholderImageView.removeFromSuperview()
                 self.uiImage = imageResult.image
                 self.imageView.image = imageResult.image
                 self.imageView.frame = CGRect(origin: .zero, size: imageResult.image.size)

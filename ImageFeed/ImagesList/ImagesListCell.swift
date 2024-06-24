@@ -13,10 +13,10 @@ final class ImagesListCell: UITableViewCell {
     weak var delegate: ImagesListCellDelegate?
     
     private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
-        return formatter
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        return dateFormatter
     }()
     
     override func prepareForReuse() {
