@@ -11,26 +11,35 @@ struct Photo {
     let size: CGSize
     let createdAt: Date?
     let welcomeDescription: String?
-    let thumbImageURL: String
-    let largeImageURL: String
+    let thumbImageURL: URL?
+    let largeImageURL: URL?
     let isLiked: Bool
     
-    init(_ photoResult: PhotoResult){
-        self.id = photoResult.id
-        self.size = CGSize(width: photoResult.width, height: photoResult.height)
+    static func mapPhotoResultToPhoto(_ photoResult: PhotoResult) -> Photo {
         let dateFormatter = ISO8601DateFormatter()
+        let createdAt: Date?
         if let createdAtString = photoResult.createdAt,
-            let date = dateFormatter.date(from: createdAtString) {
-            self.createdAt = date
+           let date = dateFormatter.date(from: createdAtString) {
+            createdAt = date
         } else {
-            self.createdAt = nil
+            createdAt = nil
             print("Failed to parse createdAt date for photo with id: \(photoResult.id)")
         }
-        self.welcomeDescription = photoResult.description
-        self.thumbImageURL = photoResult.urls.thumb
-        self.largeImageURL = photoResult.urls.full
-        self.isLiked = photoResult.likedByUser
+        
+        let thumbImageURL = URL(string: photoResult.urls.thumb)
+        let largeImageURL = URL(string: photoResult.urls.full)
+        
+        return Photo(
+            id: photoResult.id,
+            size: CGSize(width: photoResult.width, height: photoResult.height),
+            createdAt: createdAt,
+            welcomeDescription: photoResult.description,
+            thumbImageURL: thumbImageURL,
+            largeImageURL: largeImageURL,
+            isLiked: photoResult.likedByUser
+        )
     }
+
 }
 struct PhotoResult: Decodable {
     let id: String

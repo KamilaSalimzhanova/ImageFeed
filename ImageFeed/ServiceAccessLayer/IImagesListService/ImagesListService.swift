@@ -25,19 +25,17 @@ final class ImagesListService {
         
         let task = session.objectTask(for: urlRequest) { [weak self] (result: Result<[PhotoResult], Error>) in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let photoResult):
-                    if self.lastLoadedPage == nil {
-                        self.lastLoadedPage = 1
-                    } else {
-                        self.lastLoadedPage! += 1
-                    }
-                    self.photos.append(contentsOf: photoResult.map {Photo($0)})
-                    NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: nil)
-                case .failure(let error):
-                    print("[fetchPhotosNextPage]: Error fetching photos - \(error)")
+            switch result {
+            case .success(let photoResult):
+                if let currentPage = self.lastLoadedPage {
+                    self.lastLoadedPage = currentPage + 1
+                } else {
+                    self.lastLoadedPage = 1
                 }
+                self.photos.append(contentsOf: photoResult.map {Photo.mapPhotoResultToPhoto($0)})
+                NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: nil)
+            case .failure(let error):
+                print("[fetchPhotosNextPage]: Error fetching photos - \(error)")
             }
             self.currentTask = nil
         }
@@ -56,28 +54,26 @@ final class ImagesListService {
         
         let task = session.objectTask(for: urlRequest) {[weak self] (result: Result<PhotoLike, Error>) in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let photo):
-                    guard let index = self.photos.firstIndex(where: {$0.id == photo.photo.id}) else {
-                        print("liked photo id is not found in the current list")
-                        return
-                    }
-                    let photo = self.photos[index]
-                    let newPhotoResult = PhotoResult(
-                        id: photo.id,
-                        createdAt: photo.createdAt?.description,
-                        width: Int(photo.size.width),
-                        height: Int(photo.size.height),
-                        likedByUser: !photo.isLiked,
-                        description: photo.welcomeDescription,
-                        urls: UrlsResult(full: photo.largeImageURL, thumb: photo.thumbImageURL))
-                    let newPhoto = Photo(newPhotoResult)
-                    self.photos[index] = newPhoto
-                    completion(.success(()))
-                case .failure(let error):
-                    print("[session object task in images list service] \(error)")
+            switch result {
+            case .success(let photo):
+                guard let index = self.photos.firstIndex(where: {$0.id == photo.photo.id}) else {
+                    print("liked photo id is not found in the current list")
+                    return
                 }
+                let photo = self.photos[index]
+                let newPhotoResult = PhotoResult(
+                    id: photo.id,
+                    createdAt: photo.createdAt?.description,
+                    width: Int(photo.size.width),
+                    height: Int(photo.size.height),
+                    likedByUser: !photo.isLiked,
+                    description: photo.welcomeDescription,
+                    urls: UrlsResult(full: photo.largeImageURL?.absoluteString ?? "", thumb: photo.thumbImageURL?.absoluteString ?? ""))
+                let newPhoto = Photo.mapPhotoResultToPhoto(newPhotoResult)
+                self.photos[index] = newPhoto
+                completion(.success(()))
+            case .failure(let error):
+                print("[session object task in images list service] \(error)")
             }
             self.currentTask = nil
         }

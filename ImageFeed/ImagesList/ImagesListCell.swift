@@ -29,7 +29,7 @@ final class ImagesListCell: UITableViewCell {
         cache.clearMemoryCache()
         cache.clearDiskCache()
         
-        guard let thumbImageURL = URL(string: photo.thumbImageURL) else {
+        guard let thumbImageURL = photo.thumbImageURL else {
             print("thumb image url is empty")
             return
         }

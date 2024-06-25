@@ -40,24 +40,21 @@ final class OAuth2Service {
         }
         
         let task = session.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
-            DispatchQueue.main.async {
-                
-                guard let self = self, self.lastCode == code else {
-                    print("[OAuth2Service fetch oauth token]: request cancelled")
-                    completion(.failure(AuthServiceError.requestCancelled))
-                    return
-                }
-        
-                switch result {
-                case .success(let data):
-                    completion(.success(data.accessToken))
-                case .failure(let error):
-                    print("[OAuth2Service fetch oauth token]: Error in object task - код ошибки \(error)")
-                    completion(.failure(error))
-                    self.lastCode = nil
-                }
-                self.task = nil
+            guard let self = self, self.lastCode == code else {
+                print("[OAuth2Service fetch oauth token]: request cancelled")
+                completion(.failure(AuthServiceError.requestCancelled))
+                return
             }
+    
+            switch result {
+            case .success(let data):
+                completion(.success(data.accessToken))
+            case .failure(let error):
+                print("[OAuth2Service fetch oauth token]: Error in object task - код ошибки \(error)")
+                completion(.failure(error))
+                self.lastCode = nil
+            }
+            self.task = nil
         }
         self.task = task
         task.resume()
