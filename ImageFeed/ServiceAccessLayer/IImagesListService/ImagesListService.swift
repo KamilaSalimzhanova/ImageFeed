@@ -4,6 +4,7 @@ final class ImagesListService {
     private (set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
     private var currentTask: URLSessionTask?
+    private let dateFormatter = ISO8601DateFormatter()
     let session = URLSession.shared
     
     static let shared = ImagesListService()
@@ -33,7 +34,7 @@ final class ImagesListService {
                 } else {
                     self.lastLoadedPage = 1
                 }
-                self.photos.append(contentsOf: photoResult.map {Photo.mapPhotoResultToPhoto($0)})
+                self.photos.append(contentsOf: photoResult.map {Photo.mapPhotoResultToPhoto($0, date: self.dateFormatter)})
                 NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: nil)
             case .failure(let error):
                 print("[fetchPhotosNextPage]: Error fetching photos - \(error)")
@@ -72,7 +73,7 @@ final class ImagesListService {
                     likedByUser: !photo.isLiked,
                     description: photo.welcomeDescription,
                     urls: UrlsResult(full: photo.largeImageURL?.absoluteString ?? "", thumb: photo.thumbImageURL?.absoluteString ?? ""))
-                let newPhoto = Photo.mapPhotoResultToPhoto(newPhotoResult)
+                let newPhoto = Photo.mapPhotoResultToPhoto(newPhotoResult, date: self.dateFormatter)
                 self.photos[index] = newPhoto
                 completion(.success(()))
             case .failure(let error):

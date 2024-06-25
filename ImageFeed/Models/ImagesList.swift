@@ -1,11 +1,5 @@
 import Foundation
 
-private let dateTimeDefaultFormatter: DateFormatter = {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssXXX"
-    return dateFormatter
-}()
-
 struct Photo {
     let id: String
     let size: CGSize
@@ -15,17 +9,8 @@ struct Photo {
     let largeImageURL: URL?
     let isLiked: Bool
     
-    static func mapPhotoResultToPhoto(_ photoResult: PhotoResult) -> Photo {
-        let dateFormatter = ISO8601DateFormatter()
-        let createdAt: Date?
-        if let createdAtString = photoResult.createdAt,
-           let date = dateFormatter.date(from: createdAtString) {
-            createdAt = date
-        } else {
-            createdAt = nil
-            print("Failed to parse createdAt date for photo with id: \(photoResult.id)")
-        }
-        
+    static func mapPhotoResultToPhoto(_ photoResult: PhotoResult, date: ISO8601DateFormatter) -> Photo {
+        let createdAt = date.date(from: photoResult.createdAt ?? "")
         let thumbImageURL = URL(string: photoResult.urls.thumb)
         let largeImageURL = URL(string: photoResult.urls.full)
         
