@@ -141,8 +141,8 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapBackButton() {
-        let alert = UIAlertController(title: "Пока!", message: "Вы хотите выйти?", preferredStyle: .alert)
-        let action = UIAlertAction(title: "Да!", style: .default) { [weak self] _ in
+        let alert = UIAlertController(title: "Пока, пока!", message: "Уверены что хотите выйти?", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
             guard let self else {return}
             self.profileClearService.logout()
             guard let window = UIApplication.shared.windows.first else {

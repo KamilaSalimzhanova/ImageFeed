@@ -11,12 +11,13 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var cellImage: UIImageView!
     weak var delegate: ImagesListCellDelegate?
+    let cache = ImageCache.default
     
     private lazy var dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        return dateFormatter
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
     }()
     
     override func prepareForReuse() {
@@ -25,7 +26,6 @@ final class ImagesListCell: UITableViewCell {
     }
     
     func configCellImage(for photo: Photo){
-        let cache = ImageCache.default
         cache.clearMemoryCache()
         cache.clearDiskCache()
         
