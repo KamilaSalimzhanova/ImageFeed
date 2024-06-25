@@ -15,7 +15,8 @@ final class ImagesListService {
     
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
-        currentTask?.cancel()
+        
+        guard currentTask == nil else { return }
         
         let nextPage = (lastLoadedPage ?? 0) + 1
         guard let urlRequest = makePhotosRequest(page: nextPage) else {
@@ -45,7 +46,9 @@ final class ImagesListService {
     
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         assert(Thread.isMainThread)
-        currentTask?.cancel()
+        if currentTask != nil {
+            currentTask?.cancel()
+        }
         
         guard let urlRequest = changeLikeRequest(photoId: photoId, isLiked: isLike) else {
             print("[changeLike]: Could not fetch url request for changing like")
