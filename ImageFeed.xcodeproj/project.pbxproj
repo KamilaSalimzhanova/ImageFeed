@@ -15,6 +15,7 @@
 		8E221FB12C2C58D300254DC4 /* ImageListViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E221FB02C2C58D300254DC4 /* ImageListViewPresenter.swift */; };
 		8E221FB32C2C5D7200254DC4 /* ProfileViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E221FB22C2C5D7200254DC4 /* ProfileViewTests.swift */; };
 		8E221FB52C2C625F00254DC4 /* SwitchSplash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E221FB42C2C625F00254DC4 /* SwitchSplash.swift */; };
+		8E221FB72C2C636800254DC4 /* ImagesListsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E221FB62C2C636800254DC4 /* ImagesListsTests.swift */; };
 		8E2C37652C1663AD009C2CCC /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E2C37642C1663AD009C2CCC /* AuthViewController.swift */; };
 		8E2C37672C1664BA009C2CCC /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E2C37662C1664BA009C2CCC /* WebViewViewController.swift */; };
 		8E4C656B2C24D9C7004A148B /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4C656A2C24D9C7004A148B /* TabBarController.swift */; };
@@ -68,6 +69,7 @@
 		8E221FB02C2C58D300254DC4 /* ImageListViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageListViewPresenter.swift; sourceTree = "<group>"; };
 		8E221FB22C2C5D7200254DC4 /* ProfileViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewTests.swift; sourceTree = "<group>"; };
 		8E221FB42C2C625F00254DC4 /* SwitchSplash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchSplash.swift; sourceTree = "<group>"; };
+		8E221FB62C2C636800254DC4 /* ImagesListsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListsTests.swift; sourceTree = "<group>"; };
 		8E2C37642C1663AD009C2CCC /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		8E2C37662C1664BA009C2CCC /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		8E4C655C2C24C271004A148B /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,6 +127,7 @@
 			children = (
 				8E221FA62C2C4AC400254DC4 /* WebViewTests.swift */,
 				8E221FB22C2C5D7200254DC4 /* ProfileViewTests.swift */,
+				8E221FB62C2C636800254DC4 /* ImagesListsTests.swift */,
 			);
 			path = ImageFeedTests;
 			sourceTree = "<group>";
@@ -382,6 +385,7 @@
 			files = (
 				8E221FB32C2C5D7200254DC4 /* ProfileViewTests.swift in Sources */,
 				8E221FA72C2C4AC400254DC4 /* WebViewTests.swift in Sources */,
+				8E221FB72C2C636800254DC4 /* ImagesListsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

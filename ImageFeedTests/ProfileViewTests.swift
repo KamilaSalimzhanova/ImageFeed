@@ -33,11 +33,11 @@ final class ProfileViewTests: XCTestCase{
     
     func testProfileLogout() {
         //given
-        let viewController = ProfileViewPresenter()
+        let presenter = ProfileViewPresenter()
         let authToken = KeychainWrapper.standard.string(forKey: "authToken")
         
         //when
-        viewController.logoutProfile()
+        presenter.logoutProfile()
         
         //then
         XCTAssertEqual(authToken, nil)

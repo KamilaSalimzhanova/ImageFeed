@@ -20,7 +20,7 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
         tableView.rowHeight = 200
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         tableView.isScrollEnabled = true
-        presenter?.loadImages()
+        loadImages()
     }
 
     func configure(_ presenter: ImagesListPresenterProtocol) {
@@ -43,6 +43,10 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
         } else {
             super.prepare(for: segue, sender: sender)
         }
+    }
+    
+    func loadImages(){
+        presenter?.loadImages()
     }
 }
 
