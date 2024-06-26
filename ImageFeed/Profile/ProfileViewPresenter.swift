@@ -13,6 +13,7 @@ final class ProfileViewPresenter: ProfilePresenterProtocol {
     var profileClearService = ProfileLogoutService.shared
     private var profileImageService = ProfileImageService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
+    private let switchSplash = SwitchSplash.shared
     
     func profileObserver() {
         profileImageServiceObserver = NotificationCenter.default
@@ -34,11 +35,6 @@ final class ProfileViewPresenter: ProfilePresenterProtocol {
     
     func logoutProfile() {
         self.profileClearService.logout()
-        guard let window = UIApplication.shared.windows.first else {
-            assertionFailure("Invalid window configuration")
-            return
-        }
-        window.rootViewController = SplashViewController()
-        window.makeKeyAndVisible()
+        switchSplash.switchToSplashScreen()
     }
 }
