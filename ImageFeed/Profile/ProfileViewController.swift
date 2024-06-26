@@ -19,6 +19,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "ProfilePhoto")
+        logoutButton.accessibilityIdentifier = "logout button"
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 35
         return imageView

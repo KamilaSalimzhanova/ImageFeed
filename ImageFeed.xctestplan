@@ -23,6 +23,13 @@
         "identifier" : "8E221FA32C2C4AC400254DC4",
         "name" : "ImageFeedTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:ImageFeed.xcodeproj",
+        "identifier" : "8E221FBB2C2C655400254DC4",
+        "name" : "ImageFeedUITests"
+      }
     }
   ],
   "version" : 1
