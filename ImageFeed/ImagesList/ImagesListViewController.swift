@@ -1,23 +1,32 @@
 import UIKit
 import ProgressHUD
 
-final class ImagesListViewController: UIViewController {
-    @IBOutlet private var tableView: UITableView!
-    private var photos: [Photo] = []
-    private let imagesListService = ImagesListService.shared
-    private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    private var imagesListServiceObserver: NSObjectProtocol?
+public protocol ImagesListViewControllerProtocol: AnyObject {
+    var presenter: ImagesListPresenterProtocol? { get set }
+    func updateTableViewAnimated()
+}
+
+final class ImagesListViewController: UIViewController & ImagesListViewControllerProtocol {
+    var presenter: ImagesListPresenterProtocol?
     
+    private var photos: [Photo] = []
+    private let showSingleImageSegueIdentifier = "ShowSingleImage"
+    private let imagesListService = ImagesListService.shared
+    @IBOutlet private var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        configure(ImagesListViewPresenter())
         tableView.rowHeight = 200
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         tableView.isScrollEnabled = true
-        setNotification()
-        imagesListService.fetchPhotosNextPage()
+        presenter?.loadImages()
     }
+
+    func configure(_ presenter: ImagesListPresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
+     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
@@ -86,7 +95,7 @@ extension ImagesListViewController: UITableViewDelegate {
 }
 
 extension ImagesListViewController {
-    private func updateTableViewAnimated() {
+    func updateTableViewAnimated() {
         let oldCount = photos.count
         let newCount = imagesListService.photos.count
         photos = imagesListService.photos
@@ -99,18 +108,6 @@ extension ImagesListViewController {
             } completion: { _ in }
         }
     }
-    
-    private func setNotification() {
-        imagesListServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ImagesListService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateTableViewAnimated()
-            }
-    }
 }
 
 extension ImagesListViewController: ImagesListCellDelegate {
@@ -118,7 +115,7 @@ extension ImagesListViewController: ImagesListCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let photo = photos[indexPath.row]
         UIBlockingProgressHUD.show()
-        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) {[weak self] result in
+        presenter?.tapLike(id: photo.id, isLiked: !photo.isLiked) {[weak self] result in
             guard let self = self else {return}
             switch result {
             case .success:
