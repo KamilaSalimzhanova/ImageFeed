@@ -10,7 +10,8 @@ final class SwitchSplash {
             return
             
         }
-        window.rootViewController = SplashViewController()
+        let splashViewController = SplashViewController()
+        window.rootViewController = splashViewController
         window.makeKeyAndVisible()
     }
 }

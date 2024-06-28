@@ -14,19 +14,20 @@ final class ImagesListService {
     private init() {}
     
     
-    func fetchPhotosNextPage() {
+    func fetchPhotosNextPage(completion: (() -> Void)? = nil) {
         assert(Thread.isMainThread)
         
-        guard currentTask == nil else { return }
+        guard currentTask == nil else { completion?(); return }
         
         let nextPage = (lastLoadedPage ?? 0) + 1
         guard let urlRequest = makePhotosRequest(page: nextPage) else {
+            completion?()
             print("[fetchPhotosNextPage]: Could not fetch url request for photos next page")
             return
         }
         
         let task = session.objectTask(for: urlRequest) { [weak self] (result: Result<[PhotoResult], Error>) in
-            guard let self = self else { return }
+            guard let self = self else { completion?(); return }
             switch result {
             case .success(let photoResult):
                 if let currentPage = self.lastLoadedPage {
@@ -40,6 +41,7 @@ final class ImagesListService {
                 print("[fetchPhotosNextPage]: Error fetching photos - \(error)")
             }
             self.currentTask = nil
+            completion?()
         }
         self.currentTask = task
         task.resume()

@@ -12,6 +12,7 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     private var photos: [Photo] = []
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private let imagesListService = ImagesListService.shared
+    private var isLoadingData = false
     @IBOutlet private var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -92,8 +93,11 @@ extension ImagesListViewController: UITableViewDelegate {
         willDisplay cell: UITableViewCell,
         forRowAt indexPath: IndexPath
     ) {
-        if indexPath.row + 1 == photos.count {
-            imagesListService.fetchPhotosNextPage()
+        if indexPath.row + 1 == photos.count && !isLoadingData {
+            isLoadingData = true
+            imagesListService.fetchPhotosNextPage() {
+                self.isLoadingData = false
+            }
         }
     }
 }

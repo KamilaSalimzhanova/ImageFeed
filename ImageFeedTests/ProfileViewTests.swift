@@ -34,7 +34,10 @@ final class ProfileViewTests: XCTestCase{
     func testProfileLogout() {
         //given
         let presenter = ProfileViewPresenter()
-        let authToken = KeychainWrapper.standard.string(forKey: "authToken")
+        let controller = ProfileViewControllerSpy()
+        controller.presenter = presenter
+        presenter.view = controller
+        let authToken = KeychainWrapper.standard.string(forKey: Constants.tokenKey)
         
         //when
         presenter.logoutProfile()

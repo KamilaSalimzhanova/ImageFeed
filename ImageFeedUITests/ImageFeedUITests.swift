@@ -2,10 +2,10 @@ import XCTest
 
 class Image_FeedUITests: XCTestCase {
     private let app = XCUIApplication()
-    private let email = ""
-    private let password = ""
-    private let fullName = ""
-    private let username = "@"
+    private let email = "kamila.salimzhanova@nu.edu.kz"
+    private let password = "Sdfg234%"
+    private let fullName = "Kamila Salimzhanova"
+    private let username = "@test12345dddd"
     override func setUpWithError() throws {
         continueAfterFailure = false
         app.launch()
@@ -46,7 +46,7 @@ class Image_FeedUITests: XCTestCase {
         let cell = tablesQuery.children(matching: .cell).element(boundBy: 0)
         XCTAssertTrue(cell.waitForExistence(timeout: 5))
         
-        app.swipeUp()
+        cell.swipeUp()
         
         sleep(2)
         
