@@ -9,6 +9,7 @@ enum Constants {
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
     static let profileURLString = "https://api.unsplash.com/me"
     static let baseURL = URL(string: "https://unsplash.com")!
+    static let authPath = "/oauth/authorize/native"
 }
 
 struct AuthConfiguration {

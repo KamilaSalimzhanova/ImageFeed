@@ -10,7 +10,7 @@ public protocol WebViewPresenterProtocol {
 final class WebViewPresenter: WebViewPresenterProtocol {
     weak var view: WebViewViewControllerProtocol?
     var authHelper: AuthHelperProtocol
-        
+    
     init(authHelper: AuthHelperProtocol) {
         self.authHelper = authHelper
     }
@@ -20,7 +20,7 @@ final class WebViewPresenter: WebViewPresenterProtocol {
         
         view?.load(request: request)
         didUpdateProgressValue(0)
-        }
+    }
     
     func didUpdateProgressValue(_ newValue: Double) {
         let newProgressValue = Float(newValue)

@@ -22,11 +22,11 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
         tableView.isScrollEnabled = true
         loadImages()
     }
-
+    
     func configure(_ presenter: ImagesListPresenterProtocol) {
         self.presenter = presenter
         self.presenter?.view = self
-     }
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
@@ -37,7 +37,7 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
                 assertionFailure("Invalid segue destination")
                 return
             }
-
+            
             let largeImage = photos[indexPath.row].largeImageURL
             viewController.image = largeImage
         } else {
@@ -54,10 +54,10 @@ extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return photos.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
-
+        
         guard let imageListCell = cell as? ImagesListCell else {
             return UITableViewCell()
         }
@@ -75,7 +75,7 @@ extension ImagesListViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let image = photos[indexPath.row]
         
@@ -88,9 +88,9 @@ extension ImagesListViewController: UITableViewDelegate {
     }
     
     func tableView(
-      _ tableView: UITableView,
-      willDisplay cell: UITableViewCell,
-      forRowAt indexPath: IndexPath
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
     ) {
         if indexPath.row + 1 == photos.count {
             imagesListService.fetchPhotosNextPage()
@@ -125,13 +125,12 @@ extension ImagesListViewController: ImagesListCellDelegate {
             case .success:
                 self.photos = self.imagesListService.photos
                 cell.setLiked(isLiked: self.photos[indexPath.row].isLiked)
-                UIBlockingProgressHUD.dismiss()
             case .failure(let error):
-                UIBlockingProgressHUD.dismiss()
                 let alertController = UIAlertController(title: "Error", message: "Something went wrong in cell did tap like function: \(error.localizedDescription)", preferredStyle: .alert)
                 alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 self.present(alertController, animated: true, completion: nil)
             }
+            UIBlockingProgressHUD.dismiss()
         }
     }
 }
