@@ -1,11 +1,20 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
-    
+public protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? { get set }
+    func updateAvatar()
+}
+
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
+    var presenter: ProfilePresenterProtocol?
     var profileService = ProfileService.shared
     var profileClearService = ProfileLogoutService.shared
-    private var profileImageServiceObserver: NSObjectProtocol?
+    
+    func configure(_ presenter: ProfilePresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
+     }
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -44,34 +53,22 @@ final class ProfileViewController: UIViewController {
         let image = UIImage(named: "BackButton")
         button.setImage(image, for: .normal)
         button.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+        button.accessibilityIdentifier = "logout button"
         return button
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configure(ProfileViewPresenter())
         self.view.backgroundColor = UIColor(named: "YP Black") 
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-            }
-        updateAvatar()
+        presenter?.profileObserver()
         addSubviews()
         updateProfileDetails()
         makeConstraints()
     }
     
-    private func updateAvatar() {
-        guard let profileImageURL = ProfileImageService.shared.avatarURL,
-                let imageUrl = URL(string: profileImageURL)
-        else {
-            return
-            
-        }
+    func updateAvatar() {
+        guard let imageUrl = presenter?.getAvatarURL() else {return}
         let cache = ImageCache.default
         cache.clearDiskCache()
         let processor = RoundCornerImageProcessor(cornerRadius: 35)
@@ -144,13 +141,7 @@ final class ProfileViewController: UIViewController {
         let alert = UIAlertController(title: "Пока, пока!", message: "Уверены что хотите выйти?", preferredStyle: .alert)
         let action = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
             guard let self else {return}
-            self.profileClearService.logout()
-            guard let window = UIApplication.shared.windows.first else {
-                assertionFailure("Invalid window configuration")
-                return
-            }
-            window.rootViewController = SplashViewController()
-            window.makeKeyAndVisible()
+            presenter?.logoutProfile()
         }
        
         let noAction = UIAlertAction(title: "Нет", style: .default) { _ in
